@@ -6,15 +6,25 @@ PL_LED=509
 PL_KEY=510
 
 #set up LED gpio
-echo $PS_LED >> /sys/class/gpio/export > /dev/null 2>&1
+if [[ ! -e /sys/class/gpio/gpio"$PS_LED" ]];then
+	echo $PS_LED >> /sys/class/gpio/export 
+fi
 echo out >> /sys/class/gpio/gpio"$PS_LED"/direction
-echo $PL_LED >> /sys/class/gpio/export > /dev/null 2>&1
+
+if [[ ! -e /sys/class/gpio/gpio"$PL_LED" ]];then
+        echo $PL_LED >> /sys/class/gpio/export
+fi
 echo out >> /sys/class/gpio/gpio"$PL_LED"/direction
 
 #set up KEY gpio
-echo $PS_KEY >> /sys/class/gpio/export > /dev/null 2>&1
+if [[ ! -e /sys/class/gpio/gpio"$PS_KEY" ]];then
+        echo $PS_KEY >> /sys/class/gpio/export
+fi
 echo in >> /sys/class/gpio/gpio"$PS_KEY"/direction
-echo $PL_KEY >> /sys/class/gpio/export > /dev/null 2>&1
+
+if [[ ! -e /sys/class/gpio/gpio"$PL_KEY" ]];then
+        echo $PL_KEY >> /sys/class/gpio/export
+fi
 echo in >> /sys/class/gpio/gpio"$PL_KEY"/direction
 
 #push PS_KEY to contorl PS_LED
