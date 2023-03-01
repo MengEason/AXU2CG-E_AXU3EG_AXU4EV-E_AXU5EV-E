@@ -1,5 +1,10 @@
 #!/bin/sh
 
+#set speed
+SPEED=9600
+stty -F /dev/ttyS1 ispeed $SPEED ospeed $SPEED cs8
+stty -F /dev/ttyS2 ispeed $SPEED ospeed $SPEED cs8
+
 #set up 485_de gpio
 #gpiochip507 is DE port for /dev/ttyS2
 echo 507 >> /sys/class/gpio/export > /dev/null 2>&1
