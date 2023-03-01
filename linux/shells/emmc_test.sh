@@ -6,7 +6,7 @@ DEVICE_SECTOR="$DEVICE"p1
 
 #check nvme device
 if [ ! -e "$DEVICE" ];then
-	echo no nvme device found 
+	echo no emmc device found 
 	exit
 fi
 
@@ -26,18 +26,27 @@ w
 	echo "y
 
 " | mkfs.ext4 $DEVICE_SECTOR
-	echo "set SSD sector OK, add one sector $DEVICE_SECTOR"
+	echo "set emmc sector OK, add one sector $DEVICE_SECTOR"
 else
-	echo "SSD already have a sector $DEVICE_SECTOR"
+	echo "emmc already have a sector $DEVICE_SECTOR"
 fi
 
 #check mount
 CHECK_RST=`mount | grep $DEVICE_SECTOR`
-if [ "$CHECK_RST" == "" ];then
-	mkdir -p /run/media/$DEVICE_NAME
-	mount $DEVICE_SECTOR /run/media/$DEVICE_NAME
-	echo "SSD mount to /run/media/$DEVICE_NAME OK"
-else
-	echo SSD already mount
+if [ "$CHECK_RST" != "" ];then
+	umount $DEVICE_SECTOR
 fi
+mkdir -p /run/media/$DEVICE_NAME
+mount $DEVICE_SECTOR /run/media/$DEVICE_NAME
+echo "emmc mount to /run/media/$DEVICE_NAME OK"
+
+
+echo "emmc test" > /run/media/$DEVICE_NAME/.emmc_test
+CHECK_RST=`cat /run/media/$DEVICE_NAME/.emmc_test`
+if [[ "$CHECK_RST" == "emmc test" ]];then
+        echo emmc read write OK
+else
+        echo emmc read write NG
+fi
+rm -f /run/media/$DEVICE_NAME/.emmc_test
 
